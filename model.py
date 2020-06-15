@@ -1,0 +1,101 @@
+import tensorflow as tf
+
+from tensorflow.keras import Model, layers
+
+
+class MyModel(Model):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        self.conv1_1 = layers.Conv2D(32, 3, activation='relu', padding='same')
+        self.conv1_2 = layers.Conv2D(32, 3, activation='relu', padding='same')
+        self.maxpool1 = layers.MaxPool2D()
+        self.conv2_1 = layers.Conv2D(48, 3, activation='relu', padding='same')
+        self.conv2_2 = layers.Conv2D(48, 3, activation='relu', padding='same')
+        self.maxpool2 = layers.MaxPool2D()
+        self.conv3_1 = layers.Conv2D(64, 3, activation='relu', padding='same')
+        self.conv3_2 = layers.Conv2D(64, 3, activation='relu', padding='same')
+        self.maxpool3 = layers.MaxPool2D()
+        self.conv4_1 = layers.Conv2D(96, 3, activation='relu', padding='same')
+        self.conv4_2 = layers.Conv2D(96, 3, activation='relu', padding='same')
+        self.upsampling1 = layers.UpSampling2D(interpolation='bilinear')
+        self.conv5_1 = layers.Conv2D(96, 1, activation='relu', padding='same')
+        self.conv5_2 = layers.Conv2D(64, 3, activation='relu', padding='same')
+        self.upsampling2 = layers.UpSampling2D(interpolation='bilinear')
+        self.conv6_1 = layers.Conv2D(64, 1, activation='relu', padding='same')
+        self.conv6_2 = layers.Conv2D(48, 3, activation='relu', padding='same')
+        self.upsampling3 = layers.UpSampling2D(interpolation='bilinear')
+        self.conv7_1 = layers.Conv2D(48, 1, activation='relu', padding='same')
+        self.conv7_2 = layers.Conv2D(48, 3, activation='relu', padding='same')
+        self.optical_flow_layer1 = layers.Conv2D(32, 3, activation='relu', padding='same')
+        self.optical_flow_layer2 = layers.Conv2D(2, 3, activation=None, padding='same')
+        self.occlusion_layer1 = layers.Conv2D(32, 3, activation='relu', padding='same')
+        self.occlusion_layer2 = layers.Conv2D(1, 3, activation='sigmoid', padding='same')
+
+    def call(self, x):
+        # print("input: " + str(x.shape))
+        x = self.conv1_1(x)
+        # print("conv1_1: " + str(x.shape))
+        conv1_out = self.conv1_2(x)
+        # print("conv1_2: " + str(x.shape))
+        x = self.maxpool1(conv1_out)
+        # print("maxpool1: " + str(x.shape))
+        x = self.conv2_1(x)
+        # print("conv2_1: " + str(x.shape))
+        conv2_out = self.conv2_2(x)
+        # print("conv2_2: " + str(x.shape))
+        x = self.maxpool2(conv2_out)
+        # print("conv2_out: " + str(x.shape))
+        x = self.conv3_1(x)
+        # print("conv3_1: " + str(x.shape))
+        conv3_out = self.conv3_2(x)
+        # print("conv3_2: " + str(x.shape))
+        x = self.maxpool3(conv3_out)
+        # print("maxpool3: " + str(x.shape))
+        x = self.conv4_1(x)
+        # print("conv4_1: " + str(x.shape))
+        x = self.conv4_2(x)
+        # print("conv4_2: " + str(x.shape))
+        x = self.upsampling1(x)
+        # print("upsampling1: " + str(x.shape))
+        x = tf.concat([x, conv3_out], axis=-1)
+        # print("concat: " + str(x.shape))
+        x = self.conv5_1(x)
+        # print("conv5_1: " + str(x.shape))
+        x = self.conv5_2(x)
+        # print("conv5_2: " + str(x.shape))
+        x = self.upsampling2(x)
+        # print("upsampling2: " + str(x.shape))
+        x = tf.concat([x, conv2_out], axis=-1)
+        # print("concat: " + str(x.shape))
+        x = self.conv6_1(x)
+        # print("conv6_1: " + str(x.shape))
+        x = self.conv6_2(x)
+        # print("conv6_2: " + str(x.shape))
+        x = self.upsampling3(x)
+        # print("upsampling3: " + str(x.shape))
+        x = tf.concat([x, conv1_out], axis=-1)
+        # print("concat: " + str(x.shape))
+        x = self.conv7_1(x)
+        # print("conv7_1: " + str(x.shape))
+        x = self.conv7_2(x)
+        # print("conv7_2: " + str(x.shape))
+        optical_flow1 = self.optical_flow_layer1(x)
+        # print("optical_flow1: " + str(x.shape))
+        optical_flow2 = self.optical_flow_layer2(optical_flow1)
+        # print("optical_flow2: " + str(x.shape))
+        occlusion1 = self.occlusion_layer1(x)
+        # print("occlusion1: " + str(x.shape))
+        occlusion2 = self.occlusion_layer2(occlusion1)
+        # print("occlusion: " + str(x.shape))
+        x = tf.concat([optical_flow2, occlusion2], axis=-1)
+        # print("concat: " + str(x.shape))
+        return x
+
+
+
+
+
+
+
+
+
