@@ -8,6 +8,7 @@ import numpy as np
 from draw_optical_flow import draw_optical_flow
 import datetime
 from tensorboard import program
+from image_warp import image_warp
 
 kitti_path = r'C:\datasets\KITTI'
 
@@ -20,7 +21,7 @@ model.summary()
 
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
 
 current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 log_dir = 'logs/' + current_time
@@ -43,33 +44,27 @@ url = tb.launch()
 
 batch_size = 16
 
-num_train_steps = 100000
+num_train_steps = 1000000
 for step in range(num_train_steps):
     batch = reader.GetNextBatch(batch_size)
     images = Preprocessor.preprocess_image_pairs(batch)
 
     if (step % 10 == 0):
         # Show first pair:
-        img_to_show_1 = images[0, :, :, :3]
-        img_to_show_2 = images[0, :, :, 3:]
+        im1 = images[0, :, :, :3]
+        im2 = images[0, :, :, 3:]
         mean = Preprocessor.mean
         mean = np.squeeze(mean, axis=0)
-        img_to_show_1 += mean
-        img_to_show_2 += mean
+        img_to_show_1 = im1 + mean
+        img_to_show_2 = im2 + mean
         cv2.imshow('image 1', img_to_show_1)
         cv2.imshow('image 2', img_to_show_2)
         # Run network on first pair:
         imgs_to_predict = np.expand_dims(images[0, :, :, :], axis=0)
         predictions = model(imgs_to_predict, training=False)  # (1, h, w, 3)
-        optical_flow = predictions[0, :, :, :2]  # (h, w, 2)
-        occlusion = predictions[0, :, :, 2]  # (h, w)
+        optical_flow = predictions[0][0, ...]  # (h, w, 2)
         print('optical flow range: ' + str(np.min(optical_flow)) + ' ' + str(np.mean(optical_flow)) + ' ' +
               str(np.max(optical_flow)))
-        # print('occlusion range: ' + str(np.min(occlusion)) + ' ' + str(np.mean(occlusion)) + ' ' +
-        #       str(np.max(occlusion)))
-        # # Show occlusion mask:
-        # occlusion = occlusion.numpy()
-        # cv2.imshow('occlusion', occlusion)
         # Show optical flow:
         optical_flow = optical_flow.numpy()
         ofx = optical_flow[:, :, 0]
@@ -84,8 +79,16 @@ for step in range(num_train_steps):
         ofy_positive = np.clip(ofy, 0.0, max_displacement)
         color_y = np.stack([ofy_negative / max_displacement, zeros, ofy_positive / max_displacement], axis=-1)
         cv2.imshow('Y displacement', color_y)  # Blue: downwards. Red: upwards.
-        arrows_img = draw_optical_flow(images[0, :, :, :3], images[0, :, :, 3:], optical_flow)
+        # arrows_img = draw_optical_flow(images[0, :, :, :3], images[0, :, :, 3:], optical_flow)
+        arrows_img = draw_optical_flow(im1 + mean, im2 + mean, optical_flow)
         cv2.imshow('Optical flow', arrows_img)
+        # Show warped image:
+        im1_ext = np.expand_dims(im1, axis=0)
+        optical_flow_ext = np.expand_dims(optical_flow, axis=0)
+        im1_warped = image_warp(im1_ext, optical_flow_ext)
+        im1_warped += mean
+        im1_warped = np.squeeze(im1_warped, axis=0)
+        cv2.imshow("im1_warped", im1_warped)
         cv2.waitKey(1)
 
     train_step(images)
