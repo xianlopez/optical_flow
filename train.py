@@ -62,7 +62,7 @@ for step in range(num_train_steps):
         # Run network on first pair:
         imgs_to_predict = np.expand_dims(images[0, :, :, :], axis=0)
         predictions = model(imgs_to_predict, training=False)  # (1, h, w, 3)
-        optical_flow = predictions[0][0, ...]  # (h, w, 2)
+        optical_flow = predictions[-1][0, ...]  # (h, w, 2)
         print('optical flow range: ' + str(np.min(optical_flow)) + ' ' + str(np.mean(optical_flow)) + ' ' +
               str(np.max(optical_flow)))
         # Show optical flow:
