@@ -10,14 +10,19 @@ import datetime
 from tensorboard import program
 from image_warp import image_warp
 
+restore_path = r'checkpoints/mymodel'
+# restore_path = None
+
 kitti_path = r'C:\datasets\KITTI'
 
 reader = DataReader(kitti_path)
 
 model = MyModel()
-
 model.build((None, 224, 224, 6))
 model.summary()
+
+if restore_path:
+    model.load_weights(restore_path)
 
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 
@@ -26,6 +31,9 @@ optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
 current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 log_dir = 'logs/' + current_time
 summary_writer = tf.summary.create_file_writer(log_dir)
+
+# save_path = 'checkpoints\\run_' + current_time
+save_path = 'checkpoints/mymodel'
 
 @tf.function
 def train_step(images):
@@ -67,19 +75,6 @@ for step in range(num_train_steps):
               str(np.max(optical_flow)))
         # Show optical flow:
         optical_flow = optical_flow.numpy()
-        ofx = optical_flow[:, :, 0]
-        ofy = optical_flow[:, :, 1]
-        max_displacement = 10.0
-        zeros = np.zeros_like(ofx)
-        ofx_negative = -np.clip(ofx, -max_displacement, 0.0)
-        ofx_positive = np.clip(ofx, 0.0, max_displacement)
-        color_x = np.stack([ofx_negative / max_displacement, zeros, ofx_positive / max_displacement], axis=-1)
-        cv2.imshow('X displacement', color_x)  # Blue: to the left. Red: to the rigth.
-        ofy_negative = -np.clip(ofy, -max_displacement, 0.0)
-        ofy_positive = np.clip(ofy, 0.0, max_displacement)
-        color_y = np.stack([ofy_negative / max_displacement, zeros, ofy_positive / max_displacement], axis=-1)
-        cv2.imshow('Y displacement', color_y)  # Blue: downwards. Red: upwards.
-        # arrows_img = draw_optical_flow(images[0, :, :, :3], images[0, :, :, 3:], optical_flow)
         arrows_img = draw_optical_flow(im1 + mean, im2 + mean, optical_flow)
         cv2.imshow('Optical flow', arrows_img)
         # Show warped image:
@@ -97,6 +92,13 @@ for step in range(num_train_steps):
         tf.summary.scalar('loss', train_loss.result(), step=step)
 
     print('step ' + str(step) + ' train loss: ' + str(train_loss.result().numpy()))
+
+    if (step % 1000 == 0 and step > 0):
+        model.save_weights(save_path)
+
+    # if (step % 10 == 0):
+    #     print("weight (0, 0, 0, 0) of layer conv2d_22: " +
+    #           str(model.get_layer('conv2d_22').weights[0][0, 0, 0, 0].numpy()))
 
 
 
