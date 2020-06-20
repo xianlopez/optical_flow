@@ -26,7 +26,8 @@ if restore_path:
 
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
+# optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 
 current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 log_dir = 'logs/' + current_time
