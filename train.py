@@ -10,15 +10,14 @@ import datetime
 from tensorboard import program
 from image_warp import image_warp
 
-restore_path = r'checkpoints/mymodel'
-# restore_path = None
+# restore_path = r'checkpoints/mymodel'
+restore_path = None
 
-kitti_path = r'C:\datasets\KITTI'
-
-reader = DataReader(kitti_path)
+# reader = DataReader(r'C:\datasets\KITTI')
+reader = DataReader(r'C:\datasets\MPI-Sintel-complete')
 
 model = MyModel()
-model.build((None, 224, 224, 6))
+model.build((None, 224, 720, 6))
 model.summary()
 
 if restore_path:
@@ -26,8 +25,8 @@ if restore_path:
 
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 
-# optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
-optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
+# optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 
 current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 log_dir = 'logs/' + current_time
@@ -51,7 +50,7 @@ tb = program.TensorBoard()
 tb.configure(argv=[None, '--logdir', log_dir])
 url = tb.launch()
 
-batch_size = 16
+batch_size = 8
 
 num_train_steps = 1000000
 for step in range(num_train_steps):
