@@ -5,7 +5,7 @@ from loss import MyLoss
 import Preprocessor
 import cv2
 import numpy as np
-from draw_optical_flow import draw_optical_flow
+import draw_optical_flow
 import datetime
 from tensorboard import program
 from image_warp import image_warp
@@ -75,8 +75,12 @@ for step in range(num_train_steps):
               str(np.max(optical_flow)))
         # Show optical flow:
         optical_flow = optical_flow.numpy()
-        arrows_img = draw_optical_flow(im1 + mean, im2 + mean, optical_flow)
+        arrows_img = draw_optical_flow.draw_all_arrows(im1 + mean, im2 + mean, optical_flow)
         cv2.imshow('Optical flow', arrows_img)
+        # itensity_img = draw_optical_flow.draw_optical_flow_intesity(optical_flow)
+        # cv2.imshow('Intensity', itensity_img)
+        color_img = draw_optical_flow.draw_optical_flow_color(optical_flow)
+        cv2.imshow('Color', color_img)
         # Show warped image:
         im1_ext = np.expand_dims(im1, axis=0)
         optical_flow_ext = np.expand_dims(optical_flow, axis=0)
@@ -95,10 +99,6 @@ for step in range(num_train_steps):
 
     if (step % 1000 == 0 and step > 0):
         model.save_weights(save_path)
-
-    # if (step % 10 == 0):
-    #     print("weight (0, 0, 0, 0) of layer conv2d_22: " +
-    #           str(model.get_layer('conv2d_22').weights[0][0, 0, 0, 0].numpy()))
 
 
 
