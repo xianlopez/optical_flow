@@ -13,8 +13,10 @@ from image_warp import image_warp
 # restore_path = r'checkpoints/mymodel'
 restore_path = None
 
-# reader = DataReader(r'C:\datasets\KITTI')
-reader = DataReader(r'C:\datasets\MPI-Sintel-complete')
+kitti_path = r'C:\datasets\KITTI'
+sintel_path = r'C:\datasets\MPI-Sintel-complete'
+youtube_path = r'C:\datasets\youtube'
+reader = DataReader(kitti_path, sintel_path, youtube_path)
 
 model = MyModel()
 model.build((None, 224, 720, 6))
