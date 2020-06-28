@@ -11,7 +11,7 @@ def draw_arrow(image, x, y, optical_flow):
     assert end_point[0] < width
     assert end_point[1] < height
     # cv2.arrowedLine(image, tuple(start_point), tuple(end_point), (1.0, 0.0, 0.0))
-    cv2.arrowedLine(image, tuple(start_point), tuple(end_point), (1.0, 0.0, 0.0))
+    cv2.arrowedLine(image, tuple(start_point), tuple(end_point), (1.0, 0.0, 0.0), thickness=2)
 
 
 def draw_all_arrows(img1, img2, optical_flow):

@@ -21,7 +21,8 @@ def MyLoss(y_true, y_pred):
     im1_d16 = tf.image.resize(im1, (height // 16, width // 16))
     im2_d16 = tf.image.resize(im2, (height // 16, width // 16))
 
-    flow6, flow7, flow8, flow9, flow10 = y_pred
+    flows, depths, motions, egos = y_pred
+    flow6, flow7, flow8, flow9, flow10 = flows
 
     assert flow6.shape == (batch_size, height // 16, width // 16, 2)
     assert flow7.shape == (batch_size, height // 8, width // 8, 2)

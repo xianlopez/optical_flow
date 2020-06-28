@@ -88,14 +88,8 @@ def image_warp_tf(im, flow):
         warped: transformed image of the same shape as the input image.
     """
 
-    print("image_warp")
-    print("im.shape = " + str(im.shape))
     _, height, width, channels = im.shape
     num_batch = tf.unstack(tf.shape(im))[0]
-    print("num_batch = " + str(num_batch))
-    print("height = " + str(height))
-    print("width = " + str(width))
-    print("channels = " + str(channels))
     max_x = tf.cast(width - 1, 'int32')
     max_y = tf.cast(height - 1, 'int32')
     zero = tf.zeros([], dtype='int32')
