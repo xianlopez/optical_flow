@@ -21,14 +21,21 @@ def MyLoss(y_true, y_pred):
     im1_d16 = tf.image.resize(im1, (height // 16, width // 16))
     im2_d16 = tf.image.resize(im2, (height // 16, width // 16))
 
-    flows, depths, motions, egos = y_pred
+    flows, motions, depths, egos = y_pred
     flow6, flow7, flow8, flow9, flow10 = flows
+    motion6, motion7, motion8, motion9, motion10 = motions
 
     assert flow6.shape == (batch_size, height // 16, width // 16, 2)
     assert flow7.shape == (batch_size, height // 8, width // 8, 2)
     assert flow8.shape == (batch_size, height // 4, width // 4, 2)
     assert flow9.shape == (batch_size, height // 2, width // 2, 2)
     assert flow10.shape == (batch_size, height, width, 2)
+
+    assert motion6.shape == (batch_size, height // 16, width // 16, 3)
+    assert motion7.shape == (batch_size, height // 8, width // 8, 3)
+    assert motion8.shape == (batch_size, height // 4, width // 4, 3)
+    assert motion9.shape == (batch_size, height // 2, width // 2, 3)
+    assert motion10.shape == (batch_size, height, width, 3)
 
     im1_warped = image_warp(im1, flow10)  # (bs, h, w, 3)
     pixel_diff = im1_warped - im2  # (bs, h, w, 3)
@@ -86,7 +93,14 @@ def MyLoss(y_true, y_pred):
     smoothness_loss += tf.reduce_sum(tf.sqrt(tf.square(diff_i) + 1e-4)) +\
                        tf.reduce_sum(tf.sqrt(tf.square(diff_j) + 1e-4))
 
-    loss = photo_loss + 0.2 * smoothness_loss
+    # Loss on motion:
+    motion_loss = tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.square(motion6), axis=-1)))
+    motion_loss += tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.square(motion7), axis=-1)))
+    motion_loss += tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.square(motion8), axis=-1)))
+    motion_loss += tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.square(motion9), axis=-1)))
+    motion_loss += tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.square(motion10), axis=-1)))
+
+    loss = photo_loss + 0.2 * smoothness_loss + 0.01 * motion_loss
     # TODO: Should I divide by the batch size?
     loss = loss / batch_size
 

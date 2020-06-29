@@ -85,21 +85,19 @@ for step in range(num_train_steps):
         cv2.imshow('image 2', img_to_show_2)
         # Run network on first pair:
         imgs_to_predict = np.expand_dims(images[0, :, :, :], axis=0)
-        predictions = model(imgs_to_predict, training=False)
-        optical_flow = predictions[0][-1][0, ...]  # (h, w, 2)
+        flows, motions, depths, egos = model(imgs_to_predict, training=False)
+        optical_flow = flows[-1][0, ...]  # (h, w, 2)
         print('optical flow range: ' + str(np.min(optical_flow)) + ' ' + str(np.mean(optical_flow)) + ' ' +
               str(np.max(optical_flow)))
-        depth = predictions[1][-1][0, ...]  # (h, w, 1)
-        print('depth range: ' + str(np.min(depth)) + ' ' + str(np.mean(depth)) + ' ' +
-              str(np.max(depth)))
-        motion = predictions[2][-1][0, ...]  # (h, w, 3)
+        motion = motions[-1][0, ...]  # (h, w, 3)
         print('motion range: ' + str(np.min(motion)) + ' ' + str(np.mean(motion)) + ' ' +
               str(np.max(motion)))
-        ego = predictions[3][-1][0]  # (6)
-        angles = ego[:3]
-        translation = ego[3:]
-        print('angles = ' + str(angles))
-        print('translation = ' + str(translation))
+        depth = depths[-1][0, ...]  # (h, w, 3)
+        print('depth range: ' + str(np.min(depth)) + ' ' + str(np.mean(depth)) + ' ' +
+              str(np.max(depth)))
+        ego = egos[-1][0, ...]  # (h, w, 3)
+        print('ego range: ' + str(np.min(ego)) + ' ' + str(np.mean(ego)) + ' ' +
+              str(np.max(ego)))
         # Show optical flow:
         optical_flow = optical_flow.numpy()
         arrows_img = draw_optical_flow.draw_all_arrows(im1 + mean, im2 + mean, optical_flow)
