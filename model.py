@@ -110,63 +110,55 @@ class MyModel(Model):
         self.cx = cx
         self.cy = cy
 
-        self.conv1_1 = layers.Conv2D(32, 5, activation='relu', padding='same')
-        self.conv1_2 = layers.Conv2D(32, 3, activation='relu', padding='same')
+        self.conv1_1 = layers.Conv2D(32, 5, activation='relu', padding='same', name='conv1_1')
+        self.conv1_2 = layers.Conv2D(32, 3, activation='relu', padding='same', name='conv2_1')
         self.maxpool1 = layers.MaxPool2D()
-        self.conv2_1 = layers.Conv2D(64, 5, activation='relu', padding='same')
-        self.conv2_2 = layers.Conv2D(64, 3, activation='relu', padding='same')
+        self.conv2_1 = layers.Conv2D(64, 5, activation='relu', padding='same', name='conv2_1')
+        self.conv2_2 = layers.Conv2D(64, 3, activation='relu', padding='same', name='conv2_2')
         self.maxpool2 = layers.MaxPool2D()
-        self.conv3_1 = layers.Conv2D(96, 3, activation='relu', padding='same')
-        self.conv3_2 = layers.Conv2D(96, 3, activation='relu', padding='same')
+        self.conv3_1 = layers.Conv2D(96, 3, activation='relu', padding='same', name='conv3_1')
+        self.conv3_2 = layers.Conv2D(96, 3, activation='relu', padding='same', name='conv3_2')
         self.maxpool3 = layers.MaxPool2D()
-        self.conv4_1 = layers.Conv2D(128, 3, activation='relu', padding='same')
-        self.conv4_2 = layers.Conv2D(128, 3, activation='relu', padding='same')
+        self.conv4_1 = layers.Conv2D(128, 3, activation='relu', padding='same', name='conv4_1')
+        self.conv4_2 = layers.Conv2D(128, 3, activation='relu', padding='same', name='conv4_2')
         self.maxpool4 = layers.MaxPool2D()
-        self.conv5_1 = layers.Conv2D(256, 3, activation='relu', padding='same')
-        self.conv5_2 = layers.Conv2D(256, 1, activation='relu', padding='same')
+        self.conv5_1 = layers.Conv2D(160, 3, activation='relu', padding='same', name='conv5_1')
+        self.conv5_2 = layers.Conv2D(160, 3, activation='relu', padding='same', name='conv5_2')
 
-        self.conv6 = layers.Conv2D(256, 3, activation='relu', padding='same')
-        self.motion_6 = layers.Conv2D(3, 5, activation=None, padding='same')
-        self.depth_6 = layers.Conv2D(1, 5, activation='relu', padding='same')
-        self.conv_prev_ego6 = layers.Conv2D(128, 3, activation='relu', padding='same')
+        self.conv6_1 = layers.Conv2D(256, 1, activation='relu', padding='same', name='conv6_1')
+        self.conv6_2 = layers.Conv2D(160, 3, activation='relu', padding='same', name='conv6_2')
+        self.motion_6 = layers.Conv2D(3, 5, activation=None, padding='same', name='motion_6')
+        self.depth_6 = layers.Conv2D(1, 5, activation=None, padding='same', name='depth_6')
 
-        self.conv7_1 = layers.Conv2D(256, 1, activation='relu', padding='same')
-        self.conv7_2 = layers.Conv2D(128, 3, activation='relu', padding='same')
-        self.motion_7 = layers.Conv2D(3, 5, activation=None, padding='same')
-        self.depth_7 = layers.Conv2D(1, 5, activation='relu', padding='same')
-        self.conv_prev_ego7 = layers.Conv2D(128, 3, activation='relu', padding='same')
+        self.conv7_1 = layers.Conv2D(160, 1, activation='relu', padding='same', name='conv7_1')
+        self.conv7_2 = layers.Conv2D(128, 3, activation='relu', padding='same', name='conv7_2')
+        self.motion_7 = layers.Conv2D(3, 5, activation=None, padding='same', name='motion_7')
+        self.depth_7 = layers.Conv2D(1, 5, activation=None, padding='same', name='depth_7')
 
-        self.conv8_1 = layers.Conv2D(128, 1, activation='relu', padding='same')
-        self.conv8_2 = layers.Conv2D(64, 3, activation='relu', padding='same')
-        self.motion_8 = layers.Conv2D(3, 5, activation=None, padding='same')
-        self.depth_8 = layers.Conv2D(1, 5, activation='relu', padding='same')
-        self.conv_prev_ego8 = layers.Conv2D(128, 3, activation='relu', padding='same')
+        self.conv8_1 = layers.Conv2D(128, 1, activation='relu', padding='same', name='conv8_1')
+        self.conv8_2 = layers.Conv2D(64, 3, activation='relu', padding='same', name='conv8_2')
+        self.motion_8 = layers.Conv2D(3, 5, activation=None, padding='same', name='motion_8')
+        self.depth_8 = layers.Conv2D(1, 5, activation=None, padding='same', name='depth_8')
 
-        self.conv9_1 = layers.Conv2D(128, 1, activation='relu', padding='same')
-        self.conv9_2 = layers.Conv2D(64, 3, activation='relu', padding='same')
-        self.motion_9 = layers.Conv2D(3, 5, activation=None, padding='same')
-        self.depth_9 = layers.Conv2D(1, 5, activation='relu', padding='same')
-        self.conv_prev_ego9 = layers.Conv2D(128, 3, activation='relu', padding='same')
+        self.conv9_1 = layers.Conv2D(128, 1, activation='relu', padding='same', name='conv9_1')
+        self.conv9_2 = layers.Conv2D(64, 3, activation='relu', padding='same', name='conv9_2')
+        self.motion_9 = layers.Conv2D(3, 5, activation=None, padding='same', name='motion_9')
+        self.depth_9 = layers.Conv2D(1, 5, activation=None, padding='same', name='depth_9')
 
-        self.conv10_1 = layers.Conv2D(64, 1, activation='relu', padding='same')
-        self.conv10_2 = layers.Conv2D(64, 3, activation='relu', padding='same')
-        self.motion_10 = layers.Conv2D(3, 5, activation=None, padding='same')
-        self.depth_10 = layers.Conv2D(1, 5, activation='relu', padding='same')
-        self.conv_prev_ego10 = layers.Conv2D(128, 3, activation='relu', padding='same')
+        self.conv10_1 = layers.Conv2D(128, 1, activation='relu', padding='same', name='conv10_1')
+        self.conv10_2 = layers.Conv2D(64, 3, activation='relu', padding='same', name='conv10_2')
+        self.motion_10 = layers.Conv2D(3, 5, activation=None, padding='same', name='motion_10')
+        self.depth_10 = layers.Conv2D(1, 5, activation=None, padding='same', name='depth_10')
 
         self.upsampling = layers.UpSampling2D(interpolation='bilinear')
         self.flatten = layers.Flatten()
-        self.avgpool2 = layers.AveragePooling2D()
-        self.avgpool4 = layers.AveragePooling2D(pool_size=(4, 4))
-        self.avgpool8 = layers.AveragePooling2D(pool_size=(8, 8))
 
-        self.ego_conv1 = layers.Conv2D(128, 3, activation='relu', padding='same')
+        self.ego_conv1 = layers.Conv2D(128, 3, activation='relu', padding='same', name='ego_conv1')
         self.ego_maxpool1 = layers.MaxPool2D()
-        self.ego_conv2 = layers.Conv2D(128, 3, activation='relu', padding='same')
-        self.ego_maxpool2 = layers.MaxPool2D()
-        self.ego_conv3 = layers.Conv2D(64, 3, activation='relu', padding='same')
-        self.ego_dense1 = layers.Dense(64, activation='relu')
-        self.ego_dense2 = layers.Dense(6, activation=None)
+        self.ego_conv2 = layers.Conv2D(128, 3, activation='relu', padding='same', name='ego_conv2')
+        self.ego_conv3 = layers.Conv2D(64, 3, strides=(2, 2), activation='relu', padding='same', name='ego_conv3')
+        self.ego_dense1 = layers.Dense(64, activation='relu', name='ego_dense1')
+        self.ego_dense2 = layers.Dense(6, activation=None, name='ego_dense2')
 
     def call(self, x):
         im1 = x[:, :, :, :3]
@@ -203,17 +195,17 @@ class MyModel(Model):
         x2 = self.conv5_2(x2)
 
         x = tf.concat([x1, x2], axis=-1)  # 14 x 45
-        x = self.conv6(x)
+        x = self.conv6_1(x)
+        x = self.conv6_2(x)
+        ego = self.compute_ego(x)
+
         motion6 = self.motion_6(x) * 0.01
-        depth6 = tf.maximum(self.depth_6(x) + 100.0, 1.0)
-        x_ego = self.upsampling(x)  # 28 x 90
-        x_ego = self.conv_prev_ego6(x_ego)
-        ego6 = self.compute_ego(x_ego)
-        flow6 = compute_flow(depth6, motion6, ego6, self.fx / 16.0, self.fy / 16.0)  # 14 x 45
-        print('flow6: ' + str(flow6.shape))
-        print_mean_std(motion6, 'motion6')
-        print_mean_std(depth6, 'depth6')
-        print_mean_std(flow6, 'flow6')
+        depth6 = tf.maximum(self.depth_6(x) + 5.0, 0.1)
+        flow6 = compute_flow(depth6, motion6, ego, self.fx / 16.0, self.fy / 16.0)  # 14 x 45
+        # print('flow6: ' + str(flow6.shape))
+        # print_mean_std(motion6, 'motion6')
+        # print_mean_std(depth6, 'depth6')
+        # print_mean_std(flow6, 'flow6')
         flow6_up = 2 * self.upsampling(flow6)  # 28 x 90
         im1_conv4_out_warped = image_warp_tf(im1_conv4_out, flow6_up)  # 28 x 90
         x = tf.concat([x, motion6, depth6], axis=-1)
@@ -223,14 +215,12 @@ class MyModel(Model):
         x = self.conv7_1(x)  # 28 x 90
         x = self.conv7_2(x)
         motion7 = self.motion_7(x) * 0.01
-        depth7 = tf.maximum(self.depth_7(x) + 100.0, 1.0)
-        x_ego = self.conv_prev_ego7(x)
-        ego7 = self.compute_ego(x_ego)
-        flow7 = compute_flow(depth7, motion7, ego7, self.fx / 8.0, self.fy / 8.0)  # 28 x 90
-        print('flow7: ' + str(flow7.shape))
-        print_mean_std(motion7, 'motion7')
-        print_mean_std(depth7, 'depth7')
-        print_mean_std(flow7, 'flow7')
+        depth7 = tf.maximum(self.depth_7(x) + 5.0, 0.1)
+        flow7 = compute_flow(depth7, motion7, ego, self.fx / 8.0, self.fy / 8.0)  # 28 x 90
+        # print('flow7: ' + str(flow7.shape))
+        # print_mean_std(motion7, 'motion7')
+        # print_mean_std(depth7, 'depth7')
+        # print_mean_std(flow7, 'flow7')
         flow7_up = 2 * self.upsampling(flow7)  # 56 x 180
         im1_conv3_out_warped = image_warp_tf(im1_conv3_out, flow7_up)  # 56 x 180
         x = tf.concat([x, motion7, depth7], axis=-1)  # 28 x 90
@@ -240,15 +230,12 @@ class MyModel(Model):
         x = self.conv8_1(x)  # 56 x 180
         x = self.conv8_2(x)
         motion8 = self.motion_8(x) * 0.01
-        depth8 = tf.maximum(self.depth_8(x) + 100.0, 1.0)
-        x_ego = self.avgpool2(x)
-        x_ego = self.conv_prev_ego8(x_ego)
-        ego8 = self.compute_ego(x_ego)
-        flow8 = compute_flow(depth8, motion8, ego8, self.fx / 4.0, self.fy / 4.0)  # 56 x 180
-        print('flow8: ' + str(flow8.shape))
-        print_mean_std(motion8, 'motion8')
-        print_mean_std(depth8, 'depth8')
-        print_mean_std(flow8, 'flow8')
+        depth8 = tf.maximum(self.depth_8(x) + 5.0, 0.1)
+        flow8 = compute_flow(depth8, motion8, ego, self.fx / 4.0, self.fy / 4.0)  # 56 x 180
+        # print('flow8: ' + str(flow8.shape))
+        # print_mean_std(motion8, 'motion8')
+        # print_mean_std(depth8, 'depth8')
+        # print_mean_std(flow8, 'flow8')
         flow8_up = 2 * self.upsampling(flow8)  # 112 x 360
         im1_conv2_out_warped = image_warp_tf(im1_conv2_out, flow8_up)  # 112 x 360
         x = tf.concat([x, motion8, depth8], axis=-1)  # 56 x 180
@@ -258,15 +245,12 @@ class MyModel(Model):
         x = self.conv9_1(x)  # 112 x 360
         x = self.conv9_2(x)
         motion9 = self.motion_9(x) * 0.01
-        depth9 = tf.maximum(self.depth_9(x) + 100.0, 1.0)
-        x_ego = self.avgpool4(x)
-        x_ego = self.conv_prev_ego9(x_ego)
-        ego9 = self.compute_ego(x_ego)
-        flow9 = compute_flow(depth9, motion9, ego9, self.fx / 2.0, self.fy / 2.0)  # 112 x 360
-        print('flow9: ' + str(flow9.shape))
-        print_mean_std(motion9, 'motion9')
-        print_mean_std(depth9, 'depth9')
-        print_mean_std(flow9, 'flow9')
+        depth9 = tf.maximum(self.depth_9(x) + 5.0, 0.1)
+        flow9 = compute_flow(depth9, motion9, ego, self.fx / 2.0, self.fy / 2.0)  # 112 x 360
+        # print('flow9: ' + str(flow9.shape))
+        # print_mean_std(motion9, 'motion9')
+        # print_mean_std(depth9, 'depth9')
+        # print_mean_std(flow9, 'flow9')
         flow9_up = 2 * self.upsampling(flow9)  # 224 x 720
         im1_conv1_out_warped = image_warp_tf(im1_conv1_out, flow9_up)  # 224 x 720
         x = tf.concat([x, motion9, depth9], axis=-1)  # 112 x 360
@@ -276,38 +260,30 @@ class MyModel(Model):
         x = self.conv10_1(x)  # 224 x 720
         x = self.conv10_2(x)
         motion10 = self.motion_10(x) * 0.01
-        depth10 = tf.maximum(self.depth_10(x) + 100.0, 1.0)
-        x_ego = self.avgpool8(x)
-        x_ego = self.conv_prev_ego10(x_ego)
-        ego10 = self.compute_ego(x_ego)
-        flow10 = compute_flow(depth10, motion10, ego10, self.fx, self.fy)  # 224 x 720
-        print('flow10: ' + str(flow10.shape))
-        print_mean_std(motion10, 'motion10')
-        print_mean_std(depth10, 'depth10')
-        print_mean_std(flow10, 'flow10')
+        depth10 = tf.maximum(self.depth_10(x) + 5.0, 0.1)
+        flow10 = compute_flow(depth10, motion10, ego, self.fx, self.fy)  # 224 x 720
+        # print('flow10: ' + str(flow10.shape))
+        # print_mean_std(motion10, 'motion10')
+        # print_mean_std(depth10, 'depth10')
+        # print_mean_std(flow10, 'flow10')
 
         flows = [flow6, flow7, flow8, flow9, flow10]
         motions = [motion6, motion7, motion8, motion9, motion10]
         depths = [depth6, depth7, depth8, depth9, depth10]
-        egos = [ego6, ego7, ego8, ego9, ego10]
 
-        return [flows, motions, depths, egos]
+        return [flows, motions, depths, ego]
 
     def compute_ego(self, x):
-        print('compute_ego')
-        print('x: ' + str(x.shape))
-        assert x.shape[1] == 28
-        assert x.shape[2] == 90
+        assert x.shape[1] == 14
+        assert x.shape[2] == 45
         x = self.ego_conv1(x)
-        x = self.ego_maxpool1(x)
+        x = self.ego_maxpool1(x)  # 7, 22
         x = self.ego_conv2(x)
-        x = self.ego_maxpool2(x)
-        x = self.ego_conv3(x)
+        x = self.ego_conv3(x)  # 4, 11
         x = self.flatten(x)
         x = self.ego_dense1(x)
         x = self.ego_dense2(x)
-        x = x * 0.01  # To begin with a transformation closer to identity
-        # angles = tf.tanh(x[:, :3]) * np.pi / 2.0  # To make them be between -pi/2 and pi/2
+        x = x * 0.1  # To begin with a transformation closer to identity
         angles = tf.clip_by_value(x[:, :3], -np.pi, np.pi)
         translation = x[:, 3:]
         ego = tf.concat([angles, translation], axis=-1)

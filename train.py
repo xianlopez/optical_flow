@@ -85,34 +85,49 @@ for step in range(num_train_steps):
         cv2.imshow('image 2', img_to_show_2)
         # Run network on first pair:
         imgs_to_predict = np.expand_dims(images[0, :, :, :], axis=0)
-        flows, motions, depths, egos = model(imgs_to_predict, training=False)
-        optical_flow = flows[-1][0, ...]  # (h, w, 2)
+        flows, motions, depths, ego = model(imgs_to_predict, training=False)
+        optical_flow = flows[-1][0, ...].numpy()  # (h, w, 2)
         print('optical flow range: ' + str(np.min(optical_flow)) + ' ' + str(np.mean(optical_flow)) + ' ' +
               str(np.max(optical_flow)))
-        motion = motions[-1][0, ...]  # (h, w, 3)
+        motion = motions[-1][0, ...].numpy()  # (h, w, 3)
         print('motion range: ' + str(np.min(motion)) + ' ' + str(np.mean(motion)) + ' ' +
               str(np.max(motion)))
-        depth = depths[-1][0, ...]  # (h, w, 3)
+        depth = depths[-1][0, ...].numpy()  # (h, w, 1)
         print('depth range: ' + str(np.min(depth)) + ' ' + str(np.mean(depth)) + ' ' +
               str(np.max(depth)))
-        ego = egos[-1][0, ...]  # (h, w, 3)
-        print('ego range: ' + str(np.min(ego)) + ' ' + str(np.mean(ego)) + ' ' +
-              str(np.max(ego)))
+        this_ego = ego[0, ...].numpy()  # (6)
+        print('ego rotation: ' + str(this_ego[:3]))
+        print('ego translation: ' + str(this_ego[3:]))
         # Show optical flow:
-        optical_flow = optical_flow.numpy()
         arrows_img = draw_optical_flow.draw_all_arrows(im1 + mean, im2 + mean, optical_flow)
         cv2.imshow('Optical flow', arrows_img)
-        # itensity_img = draw_optical_flow.draw_optical_flow_intesity(optical_flow)
-        # cv2.imshow('Intensity', itensity_img)
         color_img = draw_optical_flow.draw_optical_flow_color(optical_flow)
         cv2.imshow('Flow', color_img)
-        # Show warped image:
-        im1_ext = np.expand_dims(im1, axis=0)
-        optical_flow_ext = np.expand_dims(optical_flow, axis=0)
-        im1_warped = image_warp(im1_ext, optical_flow_ext)
-        im1_warped += mean
-        im1_warped = np.squeeze(im1_warped, axis=0)
-        cv2.imshow("im1_warped", im1_warped)
+        # Show depth:
+        max_depth = np.maximum(np.max(depth), 0.1)
+        depth_img = np.squeeze(depth) / max_depth
+        cv2.imshow('Depth', depth_img)
+        # # Show motion:
+        # motion_abs = np.sqrt(np.sum(np.square(motion), axis=-1))
+        # max_motion = np.maximum(np.max(motion_abs), 0.1)
+        # motion_img = motion_abs / max_motion
+        # cv2.imshow('Motion', motion_img)
+        # Show optical flow, depth and motion for the lower levels as well:
+        # for i in range(4):
+        for i in range(2, 4):
+            name = str(i + 6)
+            optical_flowX = flows[i][0, ...].numpy()
+            colorX_img = draw_optical_flow.draw_optical_flow_color(optical_flowX)
+            cv2.imshow('Flow' + name, colorX_img)
+            depthX = depths[i][0, ...].numpy()
+            max_depthX = np.maximum(np.max(depthX), 0.1)
+            depthX_img = np.squeeze(depthX) / max_depthX
+            cv2.imshow('Depth' + name, depthX_img)
+            # motionX = motions[i][0, ...].numpy()
+            # motionX_abs = np.sqrt(np.sum(np.square(motionX), axis=-1))
+            # max_motionX = np.maximum(np.max(motionX_abs), 0.1)
+            # motionX_img = motionX_abs / max_motionX
+            # cv2.imshow('Motion' + name, motionX_img)
         cv2.waitKey(1)
 
     train_step(images)

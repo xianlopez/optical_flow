@@ -21,7 +21,7 @@ def MyLoss(y_true, y_pred):
     im1_d16 = tf.image.resize(im1, (height // 16, width // 16))
     im2_d16 = tf.image.resize(im2, (height // 16, width // 16))
 
-    flows, motions, depths, egos = y_pred
+    flows, motions, depths, ego = y_pred
     flow6, flow7, flow8, flow9, flow10 = flows
     motion6, motion7, motion8, motion9, motion10 = motions
 
@@ -100,7 +100,7 @@ def MyLoss(y_true, y_pred):
     motion_loss += tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.square(motion9), axis=-1)))
     motion_loss += tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.square(motion10), axis=-1)))
 
-    loss = photo_loss + 0.2 * smoothness_loss + 0.01 * motion_loss
+    loss = photo_loss + 0.2 * smoothness_loss + motion_loss
     # TODO: Should I divide by the batch size?
     loss = loss / batch_size
 
