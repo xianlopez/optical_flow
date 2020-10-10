@@ -14,6 +14,7 @@ def read_kitti(kitti_path):
                 images_dir = os.path.join(kitti_path, scenario, day, drive, 'image_02', 'data')
                 assert os.path.isdir(images_dir)
                 frames = os.listdir(images_dir)
+                frames.sort()
                 n_pairs += len(frames) - 1
                 for i in range(len(frames) - 1):
                     path_pairs.append([os.path.join(images_dir, frames[i]),
@@ -29,6 +30,7 @@ def read_sintel(sintel_path):
     for sequence in os.listdir(sequences_folder):
         images_dir = os.path.join(sequences_folder, sequence)
         frames = os.listdir(images_dir)
+        frames.sort()
         for i in range(len(frames) - 1):
             path_pairs.append([os.path.join(images_dir, frames[i]),
                                     os.path.join(images_dir, frames[i + 1])])
@@ -46,6 +48,7 @@ def read_youtube(youtube_path):
             if os.path.isdir(shot_dir):
                 n_shots += 1
                 frames = os.listdir(shot_dir)
+                frames.sort()
                 for i in range(len(frames) - 1):
                     path_pairs.append([os.path.join(shot_dir, frames[i]),
                                             os.path.join(shot_dir, frames[i + 1])])
