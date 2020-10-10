@@ -13,7 +13,8 @@ from image_warp import image_warp
 # restore_path = r'checkpoints/mymodel'
 restore_path = None
 
-kitti_path = r'C:\datasets\KITTI'
+kitti_path = "/home/xian/KITTI"
+# kitti_path = r'C:\datasets\KITTI'
 sintel_path = r'C:\datasets\MPI-Sintel-complete'
 youtube_path = r'C:\datasets\youtube'
 # reader = DataReader(kitti_path, sintel_path, youtube_path)
